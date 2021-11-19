@@ -11,7 +11,7 @@ public class Author {
     private long id;
     private String firstName;
     private String secondName;
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "author")
     private Set<Book> books = new HashSet<>();
 
     /* JPA needs a zero args constructor and hence the below code  */
