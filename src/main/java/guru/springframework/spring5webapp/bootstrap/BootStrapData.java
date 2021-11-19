@@ -12,58 +12,60 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.Flow;
 
 @Component
-public class BootStrapData implements CommandLineRunner  {
+public class BootStrapData implements CommandLineRunner {
 
-    private final AuthorRepository authorRepository;
-    private final BookRepository   bookRepository;
-    private final PublisherRepository publisherRepository;
+	private final AuthorRepository authorRepository;
+	private final BookRepository bookRepository;
+	private final PublisherRepository publisherRepository;
 
-    /* For Dependency injection */
-    public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
-        this.authorRepository = authorRepository;
-        this.bookRepository = bookRepository;
-        this.publisherRepository = publisherRepository;
-    }
+	/* For Dependency injection */
+	public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository,
+			PublisherRepository publisherRepository) {
+		this.authorRepository = authorRepository;
+		this.bookRepository = bookRepository;
+		this.publisherRepository = publisherRepository;
+	}
 
-    @Override
-    public void run(String... args) throws Exception {
+	@Override
+	public void run(String... args) throws Exception {
 
-        System.out.println("Started in Bootstrap");
+		System.out.println("Started in Bootstrap");
 
-        Publisher publisher = new Publisher();
-        publisher.setName("penguin");
-        publisher.setAddress_Line_1("10th Cross");
-        publisher.setCity("Bangalore");
-        publisher.setState("Karnataka");
-        publisher.setZip("560041");
+		Publisher publisher = new Publisher();
+		
+		publisher.setName("penguin");
+		publisher.setAddress_Line_1("10th Cross");
+		publisher.setCity("Bangalore");
+		publisher.setState("Karnataka");
+		publisher.setZip("560041");
 
-        System.out.println("Publisher Count: " + publisherRepository.count());
+		publisherRepository.save(publisher);
 
-        Author eric = new Author("Eirc","Evans");
-        Book   ddd = new Book("Device driver","1233456");
-        eric.getBooks().add(ddd);
-        ddd.getAuthor().add(eric);
+		System.out.println("Publisher Count: " + publisherRepository.count());
 
-        ddd.setPublisher(publisher);
-        publisher.getBooks().add(ddd);
+		Author eric = new Author("Eirc", "Evans");
+		Book ddd = new Book("Device driver", "1233456");
+		eric.getBooks().add(ddd);
+		ddd.getAuthor().add(eric);
 
-        Author Ajay = new Author("Ajay","Kumar");
-        Book   ajbook = new Book("Aj book","999999");
-        Ajay.getBooks().add(ajbook);
-        ajbook.getAuthor().add(Ajay);
+		ddd.setPublisher(publisher);
+		publisher.getBooks().add(ddd);
 
-        ajbook.setPublisher(publisher);
-        publisher.getBooks().add(ajbook);
+		authorRepository.save(eric);
+		bookRepository.save(ddd);
 
-        authorRepository.save(eric);
-        bookRepository.save(ddd);
-        publisherRepository.save(publisher);
+		Author Ajay = new Author("Ajay", "Kumar");
+		Book ajbook = new Book("Aj book", "999999");
+		Ajay.getBooks().add(ajbook);
+		ajbook.getAuthor().add(Ajay);
 
-        authorRepository.save(Ajay);
-        bookRepository.save(ajbook);
-        publisherRepository.save(publisher);
+		ajbook.setPublisher(publisher);
+		publisher.getBooks().add(ajbook);
 
-        System.out.println("Number of Books:" + bookRepository.count());
-         System.out.println("Publisher no of books " + publisher.getBooks().size());
-    }
+		authorRepository.save(Ajay);
+		bookRepository.save(ajbook);
+
+		System.out.println("Number of Books:" + bookRepository.count());
+		System.out.println("Publisher no of books " + publisherRepository.findById(publisher.getId()).get().getBooks().size());
+	}
 }

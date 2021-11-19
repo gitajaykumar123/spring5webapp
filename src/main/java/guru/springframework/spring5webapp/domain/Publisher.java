@@ -16,8 +16,7 @@ public class Publisher {
     private String state;
     private String zip;
 
-    @OneToMany
-    @JoinTable(name="publisher_Id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "publisher")
     private Set<Book> books = new HashSet<>();
 
     public Publisher() {
